@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #[em Members Only Messageboard], a very basic Express website developed by Mel Baker
+  
+  h3 Dynamic content
+  
+  p The messageboard has the following record counts:
+  
+  ul
+    li #[strong Messages: ] !{message_count}
+    li #[strong Users: ] !{user_count}

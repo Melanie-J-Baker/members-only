@@ -1,0 +1,19 @@
+extends layout
+
+block content
+
+    h1 #{title}
+    
+    form(method='POST')
+        div.form-group
+            label(for='title') Title:
+            input#title.form-control(type='text', placeholder='Message Title' name='title' required value=(undefined===message ? '' : message.title))
+            label(for='text') Message:
+            textarea#text.form-control(placeholder='Write your message here. Max 500 characters.' name='text' rows="4" required value=(undefined===message ? '' : message.text)) #{undefined===message ? 'Write your message here. Max 500 characters' : message.text}
+        div.form-group
+            button.btn.btn-primary(type="submit") Create Message
+
+    if errors
+        ul
+        for error in errors
+            li!= error.msg

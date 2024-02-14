@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1= title
+    
+    if user_list.length
+        ul
+            each user in user_list
+                li
+                    a(href=user.url) #{user.name}
+    else
+        p There are no users

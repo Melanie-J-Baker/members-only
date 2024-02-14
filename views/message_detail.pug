@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1 #{message.title}
+
+  p #[strong Posted by: ]
+    a(href=message.user.url) #{message.user.name}
+  p #[strong Date:] #{message.timestamp_formatted}
+  p #[strong Message:] #{message.text}
+
+  hr
+  p
+    a(href=message.url+'/delete') Delete Message
+  p
+    a(href=message.url+'/update') Edit Message

@@ -1,0 +1,25 @@
+extends layout
+
+block content
+
+    h1 #{title}
+    
+    form(method='POST')
+        div.form-group
+            label(for='first_name') First Name:
+            input#first_name.form-control(type='text', placeholder='First Name' name='first_name' required autocomplete value=(undefined===user ? '' : user.first_name))
+            label(for='last_name') Last Name:
+            input#last_name.form-control(type='text', placeholder='Last Name' name='last_name' required autocomplete value=(undefined===user ? '' : user.last_name))
+            label(for='username') Username:
+            input#username.form-control(type='text', placeholder='Username e.g. email address' name='username' required value=(undefined===user ? '' : user.username))
+            label(for='password') Password (#[em Minimum 8 characters, containing at least one uppercase letter, one lowercase letter and one number]):
+            input#password.form-control(type='password', placeholder='Create a password' name='password' required autocomplete value=(undefined===user ? '' : user.password))
+            label(for='password_confirm') Confirm Password:
+            input#password_confirm.form-control(type='password', placeholder='Confirm password' name='password_confirm' required autocomplete)
+        div.form-group
+            button.btn.btn-primary(type="submit") Sign up
+
+    if errors
+        ul
+        for error in errors
+            li!= error.msg

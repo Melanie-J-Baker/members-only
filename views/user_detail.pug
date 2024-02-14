@@ -1,0 +1,32 @@
+extends layout
+
+block content
+
+  h1 #{user.name}
+  p #{user.username}
+
+  hr
+  a(href='/messageboard/user/create/' + user._id) Write new message
+  hr
+
+  div(style='margin-left:20px;margin-top:20px')
+
+    h4 Messages
+    if user_messages.length
+      dl
+        each message in user_messages
+          dt
+            a(href=message.url) #{message.title}
+          dd #{message.timestamp_formatted}
+    else
+      p This user has not yet posted any messages.
+
+  hr
+  p
+    a(href=user.url+'/delete') Delete account
+
+  hr
+  p
+    a(href=user.url+'/update') Update account
+
+                
