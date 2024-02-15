@@ -3,11 +3,27 @@ extends layout
 block content
   h1= title
   p Welcome to #[em Members Only Messageboard], a very basic Express website developed by Mel Baker
+  hr
+  if (currentUser) 
+    h4 You are logged in as #{currentUser.username}
+    hr
+  else
+    ul
+      li 
+        a(href="/messageboard/user/login") Log in
+      li 
+        a(href="/messageboard/user/login") Sign up
   
-  h3 Dynamic content
-  
-  p The messageboard has the following record counts:
+  p This messageboard has:
   
   ul
     li #[strong Messages: ] !{message_count}
-    li #[strong Users: ] !{user_count}
+    li #[strong Members: ] !{user_count}
+
+  ul 
+    li 
+      a(href="/messageboard/messages") Messageboard
+    if (currentUser)
+      li 
+        a(href="/messageboard/message/create") Write a new message
+  

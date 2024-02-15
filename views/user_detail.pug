@@ -12,6 +12,9 @@ block content
   div(style='margin-left:20px;margin-top:20px')
 
     h4 Messages
+      
+    a(href='/messageboard/messages') See all messages
+    hr
     if user_messages.length
       dl
         each message in user_messages
@@ -20,6 +23,7 @@ block content
           dd #{message.timestamp_formatted}
     else
       p This user has not yet posted any messages.
+    hr
 
   hr
   p

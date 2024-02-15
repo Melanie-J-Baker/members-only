@@ -23,5 +23,6 @@ block content
     form(method='POST')
       div.form-group
         input#userid.form-control(type='hidden', name='userid', value=user._id )
-
-      button.btn.btn-primary(type='submit') Delete
+        button.btn.btn-primary(type='submit') Delete
+    
+    a(href="/messageboard/user/" + user._id) Cancel

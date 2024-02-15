@@ -3,6 +3,7 @@ const Message = require("../models/message");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const debug = require("debug")("user");
+const passport = require("passport");
 
 // Display list of all users
 exports.user_list = asyncHandler(async (req, res, next) => {
@@ -76,6 +77,16 @@ exports.user_create_post = [
         throw new Error("Passwords do not match");
       }
     }),
+  body("secret")
+    .isAlphanumeric()
+    .withMessage("Secret password only contains alphanumeric characters")
+    .custom(async (secret, { req }) => {
+      if (secret !== "secret") {
+        throw new Error(
+          "That is not the correct password. Passwords are case sensitive."
+        );
+      }
+    }),
   // Process req after validation and sanitization
   asyncHandler(async (req, res, next) => {
     // Extract validation errors from a req
@@ -85,7 +96,7 @@ exports.user_create_post = [
       last_name: req.body.last_name,
       username: req.body.username,
       password: req.body.password,
-      status: "member",
+      secret: req.body.secret,
     });
     if (!errors.isEmpty()) {
       res.render("sign_up_form", {
@@ -107,6 +118,27 @@ exports.user_create_post = [
     }
   }),
 ];
+
+// Display User login form on GET
+exports.user_login_get = (req, res, next) => {
+  res.render("log_in_form", { title: "Log in" });
+};
+
+// Handle User login on POST
+exports.user_login_post = passport.authenticate("local", {
+  successRedirect: "/",
+  failureRedirect: "/messageboard/user/login",
+});
+
+// Handle User logout on GET
+exports.user_logout_get = (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
+};
 
 // Display User delete form on GET
 exports.user_delete_get = asyncHandler(async (req, res, next) => {
@@ -130,7 +162,7 @@ exports.user_delete_post = asyncHandler(async (req, res, next) => {
   // Get details of user and their messages in parallel
   const [user, allMessagesByUser] = await Promise.all([
     User.findById(req.params.id).exec(),
-    Message.find({ user: req.params.id }, "title timestamp").exec(),
+    Message.find({ user: req.params.id }, "title user timestamp").exec(),
   ]);
   if (allMessagesByUser.length > 0) {
     // User has messages. Render in same way as for GET route
@@ -196,6 +228,16 @@ exports.user_update_post = [
         throw new Error("Passwords do not match");
       }
     }),
+  body("secret")
+    .isAlphanumeric()
+    .withMessage("Secret password only contains alphanumeric characters")
+    .custom(async (secret, { req }) => {
+      if (secret !== "secret") {
+        throw new Error(
+          "That is not the correct password. Passwords are case sensitive."
+        );
+      }
+    }),
   // Process req after validation and sanitization
   asyncHandler(async (req, res, next) => {
     // Extract validation errors from the request
@@ -206,7 +248,7 @@ exports.user_update_post = [
       last_name: req.body.last_name,
       username: req.body.username,
       password: req.body.password,
-      status: "member",
+      secret: req.body.secret,
       _id: req.params.id,
     });
     if (!errors.isEmpty()) {

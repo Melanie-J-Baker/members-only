@@ -18,8 +18,8 @@ exports.index = asyncHandler(async (req, res, next) => {
 // Display list of all messages
 exports.message_list = asyncHandler(async (req, res, next) => {
   const allMessages = await Message.find({})
-    .sort({ user: 1 })
     .populate("user")
+    .sort({ timestamp: -1 })
     .exec();
   res.render("message_list", {
     title: "All Messages",

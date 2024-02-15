@@ -15,14 +15,22 @@ html(lang='en')
           block sidebar
             ul(class='sidebar-nav')
               li
-                a(href='/messageboard') Messageboard
+                a(href='/messageboard') Home
               li
-                a(href='/messageboard/messages') All Messages
-              li
-                a(href='/messageboard/users') All users
-                hr
-              li
-                a(href='/messageboard/user/create') Sign up
+                a(href='/messageboard/messages') Messageboard
+              if (currentUser)
+                li
+                  a(href='/messageboard/users') Members
+                  hr
+                li
+                  a(href='/messageboard/user/' + currentUser._id) Profile
+                li 
+                  a(href='/messageboard/user/logout') Log out
+              else
+                li
+                  a(href='/messageboard/user/create') Sign up
+                li
+                  a(href='/messageboard/user/login') Log in
 
         div(class='col-sm-9')
           block content

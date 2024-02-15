@@ -36,14 +36,14 @@ async function userCreate(
   last_name,
   username,
   password,
-  status
+  secret
 ) {
   const userdetail = {
     first_name: first_name,
     last_name: last_name,
     username: username,
     password: password,
-    status: status,
+    secret: secret,
   };
 
   const user = new User(userdetail);
@@ -76,7 +76,7 @@ async function createUsers() {
       "Rothfuss",
       "prothfuss@hotmail.com",
       "TestUser0",
-      "member"
+      "secret"
     ),
     userCreate(1, "Ben", "Bova", "benbova@live.co.uk", "TestUser1", "secret"),
     userCreate(
@@ -85,7 +85,7 @@ async function createUsers() {
       "Asimov",
       "iasimov@hotmail.co.uk",
       "TestUser2",
-      "admin"
+      "secret"
     ),
     userCreate(
       3,
@@ -93,9 +93,9 @@ async function createUsers() {
       "Billings",
       "bobbillings@gmail.com",
       "TestUser3",
-      "none"
+      "secret"
     ),
-    userCreate(4, "Jim", "Jones", "jimjones@yahoo.com", "TestUser4", "member"),
+    userCreate(4, "Jim", "Jones", "jimjones@yahoo.com", "TestUser4", ""),
   ]);
 }
 

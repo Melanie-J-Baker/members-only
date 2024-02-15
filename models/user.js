@@ -1,28 +1,29 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const UserSchema = new Schema({
-  first_name: { type: String, required: true, maxLength: 50 },
-  last_name: { type: String, required: true, maxLength: 50 },
-  username: {
-    type: String,
-    required: true,
-    maxLength: 75,
-    match:
-      /^(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){0,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){0,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}$/,
+const UserSchema = new Schema(
+  {
+    first_name: { type: String, required: true, maxLength: 50 },
+    last_name: { type: String, required: true, maxLength: 50 },
+    username: {
+      type: String,
+      required: true,
+      maxLength: 75,
+      match:
+        /^(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){0,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){0,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}$/,
+    },
+    password: {
+      type: String,
+      required: true,
+      maxLength: 12,
+      match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+    },
+    secret: { type: String, default: "" },
   },
-  password: {
-    type: String,
-    required: true,
-    maxLength: 12,
-    match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-  },
-  status: {
-    type: String,
-    required: true,
-    enum: ["none", "member", "secret", "admin"],
-    default: "none",
-  },
-});
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
 
 // Virtual for full name
 UserSchema.virtual("name").get(function () {

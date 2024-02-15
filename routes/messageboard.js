@@ -40,6 +40,15 @@ router.get("/user/create", user_controller.user_create_get);
 // POST request to create User
 router.post("/user/create", user_controller.user_create_post);
 
+// GET request to log in User
+router.get("/user/login", user_controller.user_login_get);
+
+// POST request to log in User
+router.post("/user/login", user_controller.user_login_post);
+
+// GET request to log out User
+router.get("/user/logout", user_controller.user_logout_get);
+
 // GET request to delete User
 router.get("/user/:id/delete", user_controller.user_delete_get);
 
