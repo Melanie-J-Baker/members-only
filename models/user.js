@@ -14,11 +14,9 @@ const UserSchema = new Schema(
     password: {
       type: String,
       required: true,
-      maxLength: 12,
-      match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
     },
-    secret: { type: String, default: "" },
-    admin: { type: Boolean, default: false },
+    secret: { type: String, default: "", required: false },
+    admin: { type: Boolean, default: false, required: false },
   },
   {
     toJSON: { virtuals: true },

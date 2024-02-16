@@ -12,13 +12,13 @@ block content
         label(for='username') Username (your email address):
         input#username.form-control(type='text', placeholder='Your email address' name='username' required value=(undefined===user ? '' : user.username))
         label(for='password') Password (#[em Minimum 8 characters, with at least one uppercase letter, one lowercase letter and one number]):
-        input#password.form-control(type='password', placeholder='Create a password' name='password' required autocomplete value=(undefined===user ? '' : user.password))
+        input#password.form-control(type='password', placeholder='Create a password' name='password' required autocomplete value='')
         label(for='password_confirm') Confirm Password:
-        input#password_confirm.form-control(type='password', placeholder='Confirm password' name='password_confirm' required autocomplete value=(undefined===user ? '' : user.password))
+        input#password_confirm.form-control(type='password', placeholder='Confirm password' name='password_confirm' required autocomplete value='')
         label(for="secret") Secret Password: (#[em Optional - Join the club and see member details for messages])
-        input#secret.form-control(type='password' placeholder='Enter secret password here' name='secret' default='' value=(undefined===user ? '' : user.secret))
+        input#secret.form-control(type='password' placeholder='Enter secret password here' name='secret' default='' value='')
         label(for="adminPassword") Admin Password:
-        input#adminPassword.form-control(type='password' placeholder='Admin only' name='adminPassword' value=(undefined===user ? '' : user.adminPassword))
+        input#adminPassword.form-control(type='password' placeholder='Admin only' name='adminPassword' value='')
     div.form-group
         button.btn.btn-primary(type="submit") Update
 

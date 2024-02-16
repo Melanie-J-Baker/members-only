@@ -6,7 +6,7 @@ block content
   p #{user.username}
 
   hr
-  if (currentUser.id == user._id) 
+  if (currentUser && currentUser.id == user._id) 
     a(href='/messageboard/user/create/' + user._id) Write new message
     hr
 
@@ -23,14 +23,14 @@ block content
             a(href=message.url) #{message.title}
           dd #{message.timestamp_formatted}
     else
-      if (currentUser.id == user._id)
+      if (currentUser && currentUser.id == user._id)
         p You have not yet posted any messages.
         hr
       else
         p This user has not yet posted any messages.
         hr
   
-  if (currentUser.id == user.id)
+  if (currentUser && currentUser.id == user.id || currentUser && currentUser.admin == true)
     hr
     p
       a(href=user.url+'/delete') Delete account

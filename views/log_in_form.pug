@@ -11,7 +11,7 @@ block content
             input#username.form-control(type='text', placeholder='Your email address' name='username' required value=(undefined===user ? '' : user.username))
         div.form-group
             label(for='password') Password:
-            input#password.form-control(type='password', placeholder='Please enter your password' name='password' required autocomplete value=(undefined===user ? '' : user.password))
+            input#password.form-control(type='password', placeholder='Please enter your password' name='password' required autocomplete value='')
         div.form-group
             button.btn.btn-primary(type="submit") Log in
 

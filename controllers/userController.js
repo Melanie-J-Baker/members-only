@@ -4,6 +4,8 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const debug = require("debug")("user");
 const passport = require("passport");
+const bcrypt = require("bcryptjs");
+const user = require("../models/user");
 
 // Display list of all users
 exports.user_list = asyncHandler(async (req, res, next) => {
@@ -54,41 +56,23 @@ exports.user_create_post = [
     .escape()
     .withMessage("Last name must be specified"),
   body("username", "Invalid username").trim().isLength({ min: 1, max: 30 }),
-  body("password", "Invalid password")
-    .isLength({ min: 8 })
-    .isAlphanumeric()
-    .withMessage("Password must only contain letters and numbers")
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
-    .withMessage(
-      "Password must contain one capital letter, one lowercase letter, and one number"
-    ),
-  body("password_confirm")
-    .isLength({ min: 8 })
-    .isAlphanumeric()
-    .withMessage("Password must only contain letters and numbers")
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
-    .withMessage(
-      "Password must contain one capital letter, one lowercase letter, and one number"
-    )
-    .custom(async (password_confirm, { req }) => {
-      const password = req.body.password;
-      // If passwords do not match throw error
-      if (password !== password_confirm) {
-        throw new Error("Passwords do not match");
-      }
-    }),
-  body("secret")
-    .isAlphanumeric()
-    .withMessage("Secret password only contains alphanumeric characters")
-    .custom(async (secret, { req }) => {
-      if (secret !== "secret") {
-        throw new Error(
-          "That is not the correct password. Passwords are case sensitive."
-        );
-      }
-    }),
+  body("password", "Invalid password").isLength({ min: 8 }),
+  body("password_confirm").custom(async (password_confirm, { req }) => {
+    const password = req.body.password;
+    // If passwords do not match throw error
+    if (password !== password_confirm) {
+      throw new Error("Passwords do not match");
+    }
+  }),
+  body("secret").custom(async (secret, { req }) => {
+    if (secret && secret !== "secret") {
+      throw new Error(
+        "That is not the correct password. Passwords are case sensitive."
+      );
+    }
+  }),
   body("adminPassword").custom(async (adminPassword, { req }) => {
-    if (adminPassword !== "omnipotent") {
+    if (adminPassword && adminPassword !== "omnipotent") {
       throw new Error(
         "That is not the correct password. Passwords are case sensitive"
       );
@@ -98,33 +82,47 @@ exports.user_create_post = [
   asyncHandler(async (req, res, next) => {
     // Extract validation errors from a req
     const errors = validationResult(req);
+    // If correct admin password mark user as admin
     const isAdmin = req.body.adminPassword == "omnipotent" ? true : false;
-    const user = new User({
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      username: req.body.username,
-      password: req.body.password,
-      secret: req.body.secret,
-      admin: isAdmin,
-    });
-    if (!errors.isEmpty()) {
-      res.render("sign_up_form", {
-        title: "Create Account",
-        user: user,
-        errors: errors.array(),
-      });
-      return;
-    } else {
-      const userExists = await User.findOne({
-        username: req.body.username,
-      }).exec();
-      if (userExists) {
-        res.redirect(userExists.url);
+    // Hash password
+    bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
+      if (err) {
+        next(err);
       } else {
-        await user.save();
-        res.redirect(user.url);
+        const user = new User({
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+          username: req.body.username,
+          password: hashedPassword,
+          secret: req.body.secret,
+          admin: isAdmin,
+        });
+        if (!errors.isEmpty()) {
+          res.render("sign_up_form", {
+            title: "Create Account",
+            user: user,
+            errors: errors.array(),
+          });
+          return;
+        } else {
+          const userExists = await User.findOne({
+            username: req.body.username,
+          }).exec();
+          if (userExists) {
+            res.redirect(userExists.url);
+          } else {
+            await user.save();
+            req.login(user, function (err) {
+              if (!err) {
+                res.redirect(user.url);
+              } else {
+                next(err);
+              }
+            });
+          }
+        }
       }
-    }
+    });
   }),
 ];
 
@@ -258,13 +256,26 @@ exports.user_update_post = [
   asyncHandler(async (req, res, next) => {
     // Extract validation errors from the request
     const errors = validationResult(req);
+    // If correct admin password mark user as admin
     const isAdmin = req.body.adminPassword == "omnipotent" ? true : false;
+    // Hash password
+    const hashPassword = bcrypt.hash(
+      req.body.password,
+      10,
+      async (err, hashedPassword) => {
+        if (err) {
+          next(err);
+        } else {
+          return hashedPassword;
+        }
+      }
+    );
     // Create user object with data (and old id)
     const user = new User({
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       username: req.body.username,
-      password: req.body.password,
+      password: hashPassword,
       secret: req.body.secret,
       admin: isAdmin,
       _id: req.params.id,

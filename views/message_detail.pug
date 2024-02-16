@@ -3,16 +3,16 @@ extends layout
 block content
   h1 #{message.title}
 
-  if (currentUser.secret == "secret" || currentUser.admin == true)
+  if (currentUser && currentUser.secret == "secret" || currentUser && currentUser.admin == true)
     p #[strong Posted by: ]
       a(href=message.user.url) #{message.user.name}
     p #[strong Date:] #{message.timestamp_formatted}
   p #[strong Message:] #{message.text}
 
-  if (currentUser.id == message.user._id || currentUser.admin == true)
+  if (currentUser && currentUser.id == message.user._id || currentUser && currentUser.admin == true)
     hr
     p
       a(href=message.url+'/delete') Delete Message
-  if currentUser.id == message.user._id
+  if (currentUser && currentUser.id == message.user._id)
     p
       a(href=message.url+'/update') Edit Message
