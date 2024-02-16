@@ -1,5 +1,4 @@
 require("dotenv").config();
-console.log(process.env);
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
@@ -73,7 +72,7 @@ app.use(
     secret: "secret",
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create(options),
+    store: MongoStore.create({ mongoUrl: mongoDB }),
   })
 );
 app.use(passport.initialize());
