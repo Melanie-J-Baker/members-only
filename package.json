@@ -2,7 +2,7 @@
   "name": "members-only",
   "version": "0.0.0",
   "engines": {
-    "node": ">=18.18.1"
+    "node": ">=18.19.1"
   },
   "private": true,
   "scripts": {
@@ -28,6 +28,7 @@
     "mongodb": "^6.3.0",
     "mongoose": "^8.1.2",
     "morgan": "~1.9.1",
+    "node": "^21.6.2",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "pug": "2.0.0-beta11"
