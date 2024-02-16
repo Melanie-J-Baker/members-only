@@ -87,16 +87,25 @@ exports.user_create_post = [
         );
       }
     }),
+  body("adminPassword").custom(async (adminPassword, { req }) => {
+    if (adminPassword !== "omnipotent") {
+      throw new Error(
+        "That is not the correct password. Passwords are case sensitive"
+      );
+    }
+  }),
   // Process req after validation and sanitization
   asyncHandler(async (req, res, next) => {
     // Extract validation errors from a req
     const errors = validationResult(req);
+    const isAdmin = req.body.adminPassword == "omnipotent" ? true : false;
     const user = new User({
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       username: req.body.username,
       password: req.body.password,
       secret: req.body.secret,
+      admin: isAdmin,
     });
     if (!errors.isEmpty()) {
       res.render("sign_up_form", {
@@ -238,10 +247,18 @@ exports.user_update_post = [
         );
       }
     }),
+  body("adminPassword").custom(async (adminPassword, { req }) => {
+    if (adminPassword !== "omnipotent") {
+      throw new Error(
+        "That is not the correct password. Passwords are case sensitive"
+      );
+    }
+  }),
   // Process req after validation and sanitization
   asyncHandler(async (req, res, next) => {
     // Extract validation errors from the request
     const errors = validationResult(req);
+    const isAdmin = req.body.adminPassword == "omnipotent" ? true : false;
     // Create user object with data (and old id)
     const user = new User({
       first_name: req.body.first_name,
@@ -249,6 +266,7 @@ exports.user_update_post = [
       username: req.body.username,
       password: req.body.password,
       secret: req.body.secret,
+      admin: isAdmin,
       _id: req.params.id,
     });
     if (!errors.isEmpty()) {

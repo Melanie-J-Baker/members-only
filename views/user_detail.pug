@@ -6,8 +6,9 @@ block content
   p #{user.username}
 
   hr
-  a(href='/messageboard/user/create/' + user._id) Write new message
-  hr
+  if (currentUser.id == user._id) 
+    a(href='/messageboard/user/create/' + user._id) Write new message
+    hr
 
   div(style='margin-left:20px;margin-top:20px')
 
@@ -22,15 +23,17 @@ block content
             a(href=message.url) #{message.title}
           dd #{message.timestamp_formatted}
     else
-      p This user has not yet posted any messages.
+      if (currentUser.id == user._id)
+        p You have not yet posted any messages.
+        hr
+      else
+        p This user has not yet posted any messages.
+        hr
+  
+  if (currentUser.id == user.id)
     hr
-
-  hr
-  p
-    a(href=user.url+'/delete') Delete account
-
-  hr
-  p
-    a(href=user.url+'/update') Update account
-
-                
+    p
+      a(href=user.url+'/delete') Delete account
+    hr
+    p
+      a(href=user.url+'/update') Update account

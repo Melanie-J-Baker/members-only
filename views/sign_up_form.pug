@@ -19,6 +19,8 @@ block content
             input#password_confirm.form-control(type='password' placeholder='Confirm password' name='password_confirm' required autocomplete)
             label(for="secret") Secret Password: (#[em Optional - Join the club and see member details for messages])
             input#secret.form-control(type='password' placeholder='Enter secret password here' name='secret' default="" value=(undefined===user ? '' : user.secret))
+            label(for="adminPassword") Admin Password:
+            input#adminPassword.form-control(type='password' placeholder='Admin only' name='adminPassword' value=(undefined===user ? '' : user.adminPassword))
         div.form-group
             button.btn.btn-primary(type="submit") Sign up
 

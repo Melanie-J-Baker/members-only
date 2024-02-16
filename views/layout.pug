@@ -18,10 +18,11 @@ html(lang='en')
                 a(href='/messageboard') Home
               li
                 a(href='/messageboard/messages') Messageboard
+
               if (currentUser)
                 li
                   a(href='/messageboard/users') Members
-                  hr
+                hr   
                 li
                   a(href='/messageboard/user/' + currentUser._id) Profile
                 li 
@@ -31,6 +32,13 @@ html(lang='en')
                   a(href='/messageboard/user/create') Sign up
                 li
                   a(href='/messageboard/user/login') Log in
+              hr
+              if currentUser
+                li Logged in as #{currentUser.username}
+                if (currentUser.secret == "secret")
+                  li Logged in to members only club
+                if (currentUser.admin == true)
+                  li Logged in as ADMIN
 
         div(class='col-sm-9')
           block content

@@ -18,6 +18,7 @@ const UserSchema = new Schema(
       match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
     },
     secret: { type: String, default: "" },
+    admin: { type: Boolean, default: false },
   },
   {
     toJSON: { virtuals: true },

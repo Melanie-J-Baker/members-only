@@ -9,7 +9,7 @@ block content
                     a(href=message.url) #{message.title}
                     if (!currentUser)
                         p #{message.text}
-                    else if (currentUser.secret === "secret")
+                    else if (currentUser.secret === "secret" || currentUser.admin == true)
                         p (#{message.user.name},#{message.timestamp_formatted}): #{message.text}
                     else 
                         p #{message.text}
