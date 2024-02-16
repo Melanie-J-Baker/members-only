@@ -212,41 +212,23 @@ exports.user_update_post = [
     .escape()
     .withMessage("Last name must be specified"),
   body("username", "Invalid username").trim().isLength({ min: 1, max: 30 }),
-  body("password", "Invalid password")
-    .isLength({ min: 8 })
-    .isAlphanumeric()
-    .withMessage("Password must only contain letters and numbers")
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
-    .withMessage(
-      "Password must contain one capital letter, one lowercase letter, and one number"
-    ),
-  body("password_confirm")
-    .isLength({ min: 8 })
-    .isAlphanumeric()
-    .withMessage("Password must only contain letters and numbers")
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
-    .withMessage(
-      "Password must contain one capital letter, one lowercase letter, and one number"
-    )
-    .custom(async (password_confirm, { req }) => {
-      const password = req.body.password;
-      // If passwords do not match throw error
-      if (password !== password_confirm) {
-        throw new Error("Passwords do not match");
-      }
-    }),
-  body("secret")
-    .isAlphanumeric()
-    .withMessage("Secret password only contains alphanumeric characters")
-    .custom(async (secret, { req }) => {
-      if (secret !== "secret") {
-        throw new Error(
-          "That is not the correct password. Passwords are case sensitive."
-        );
-      }
-    }),
+  body("password", "Invalid password").isLength({ min: 8 }),
+  body("password_confirm").custom(async (password_confirm, { req }) => {
+    const password = req.body.password;
+    // If passwords do not match throw error
+    if (password !== password_confirm) {
+      throw new Error("Passwords do not match");
+    }
+  }),
+  body("secret").custom(async (secret, { req }) => {
+    if (secret && secret !== "secret") {
+      throw new Error(
+        "That is not the correct password. Passwords are case sensitive."
+      );
+    }
+  }),
   body("adminPassword").custom(async (adminPassword, { req }) => {
-    if (adminPassword !== "omnipotent") {
+    if (adminPassword && adminPassword !== "omnipotent") {
       throw new Error(
         "That is not the correct password. Passwords are case sensitive"
       );
@@ -291,8 +273,15 @@ exports.user_update_post = [
     } else {
       // Data is valid - update user
       await User.findByIdAndUpdate(req.params.id, user);
-      // Redirect to user detail page
-      res.redirect(user.url);
+      // Keep user logged in
+      req.login(user, function (err) {
+        if (!err) {
+          // Redirect to user detail page
+          res.redirect(user.url);
+        } else {
+          next(err);
+        }
+      });
     }
   }),
 ];
