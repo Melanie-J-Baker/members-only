@@ -8,6 +8,7 @@ const logger = require("morgan");
 const compression = require("compression");
 const helmet = require("helmet");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const User = require("./models/user");
@@ -67,7 +68,14 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-app.use(session({ secret: "secret", resave: false, saveUninitialized: true }));
+app.use(
+  session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create(options),
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use((req, res, next) => {
