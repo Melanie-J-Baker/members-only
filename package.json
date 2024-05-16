@@ -39,6 +39,7 @@
     "@flydotio/dockerfile": "^0.5.2",
     "eslint": "^9.2.0",
     "globals": "^15.2.0",
-    "nodemon": "^3.0.3"
+    "nodemon": "^3.0.3",
+    "prettier": "3.2.5"
   }
 }
