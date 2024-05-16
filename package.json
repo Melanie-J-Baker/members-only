@@ -35,7 +35,10 @@
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {
+    "@eslint/js": "^9.2.0",
     "@flydotio/dockerfile": "^0.5.2",
+    "eslint": "^9.2.0",
+    "globals": "^15.2.0",
     "nodemon": "^3.0.3"
   }
 }

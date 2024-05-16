@@ -3,7 +3,7 @@ const Message = require("../models/message");
 const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 
-exports.index = asyncHandler(async (req, res, next) => {
+exports.index = asyncHandler(async (req, res) => {
   const [numMessages, numUsers] = await Promise.all([
     Message.countDocuments({}).exec(),
     User.countDocuments({}).exec(),
@@ -16,7 +16,7 @@ exports.index = asyncHandler(async (req, res, next) => {
 });
 
 // Display list of all messages
-exports.message_list = asyncHandler(async (req, res, next) => {
+exports.message_list = asyncHandler(async (req, res) => {
   const allMessages = await Message.find({})
     .populate("user")
     .sort({ timestamp: -1 })
@@ -46,7 +46,7 @@ exports.message_detail = asyncHandler(async (req, res, next) => {
 });
 
 // Display create message form on GET
-exports.message_create_get = asyncHandler(async (req, res, next) => {
+exports.message_create_get = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id).exec();
   res.render("message_form", {
     title: "Create Message",
@@ -66,7 +66,7 @@ exports.message_create_post = [
     .isLength({ min: 1, max: 500 })
     .escape(),
   // process request after validation and sanitisation
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     // Extract validation errors from request
     const errors = validationResult(req);
     // Create message object with data
@@ -93,7 +93,7 @@ exports.message_create_post = [
 ];
 
 // Display Message delete form on GET
-exports.message_delete_get = asyncHandler(async (req, res, next) => {
+exports.message_delete_get = asyncHandler(async (req, res) => {
   // Get details of message
   const message = await Message.findById(req.params.id).exec();
   if (message === null) {
@@ -107,7 +107,7 @@ exports.message_delete_get = asyncHandler(async (req, res, next) => {
 });
 
 // Handle Message delete on POST
-exports.message_delete_post = asyncHandler(async (req, res, next) => {
+exports.message_delete_post = asyncHandler(async (req, res) => {
   // Get details of message
   const message = await Message.findById(req.params.id).populate("user").exec();
   if (message === null) {
@@ -146,7 +146,7 @@ exports.message_update_post = [
     .isLength({ min: 1, max: 500 })
     .escape(),
   // process request after validation and sanitisation
-  asyncHandler(async (req, res, next) => {
+  asyncHandler(async (req, res) => {
     // Extract validation errors from request
     const errors = validationResult(req);
     // Create message object with data

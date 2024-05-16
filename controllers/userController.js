@@ -5,10 +5,9 @@ const { body, validationResult } = require("express-validator");
 const debug = require("debug")("user");
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
-const user = require("../models/user");
 
 // Display list of all users
-exports.user_list = asyncHandler(async (req, res, next) => {
+exports.user_list = asyncHandler(async (req, res) => {
   const allUsers = await User.find().sort({ name: 1 }).exec();
   res.render("user_list", {
     title: "All users",
@@ -39,7 +38,7 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
 });
 
 // Display sign-up form on GET
-exports.user_create_get = (req, res, next) => {
+exports.user_create_get = (req, res) => {
   res.render("sign_up_form", { title: "Create Account" });
 };
 
@@ -127,7 +126,7 @@ exports.user_create_post = [
 ];
 
 // Display User login form on GET
-exports.user_login_get = (req, res, next) => {
+exports.user_login_get = (req, res) => {
   res.render("log_in_form", { title: "Log in" });
 };
 
@@ -148,7 +147,7 @@ exports.user_logout_get = (req, res, next) => {
 };
 
 // Display User delete form on GET
-exports.user_delete_get = asyncHandler(async (req, res, next) => {
+exports.user_delete_get = asyncHandler(async (req, res) => {
   // Get details of user and their messages in parallel
   const [user, allMessagesByUser] = await Promise.all([
     User.findById(req.params.id).exec(),
@@ -165,7 +164,7 @@ exports.user_delete_get = asyncHandler(async (req, res, next) => {
 });
 
 // Handle User delete on POST
-exports.user_delete_post = asyncHandler(async (req, res, next) => {
+exports.user_delete_post = asyncHandler(async (req, res) => {
   // Get details of user and their messages in parallel
   const [user, allMessagesByUser] = await Promise.all([
     User.findById(req.params.id).exec(),
